@@ -139,7 +139,7 @@ const handleScroll = (show, hide) => {
 }
 
 const NavContent = ({
-    type,
+    nav_type,
     is_platforms_open,
     has_animation,
     handlePlatformsClick,
@@ -153,8 +153,49 @@ const NavContent = ({
     is_canvas_menu_open,
     closeOffCanvasMenu,
 }) => {
-    if (type === 'partners') {
-        return <div>Partners</div>
+    console.log('nav_type: ', nav_type)
+    if (nav_type === 'partners') {
+        return (
+            <Wrapper>
+                <NavLeft>
+                    <LogoLink to="/" aria-label={localize('Home')}>
+                        <Logo />
+                    </LogoLink>
+                </NavLeft>
+                <NavCenter>
+                    <NavLink onClick={handleNormalLink} margin>
+                        <StyledLink
+                            activeClassName="active"
+                            to="/partners/"
+                            aria-label={localize('Affiliate & IB')}
+                            partiallyActive={true}
+                        >
+                            {localize('Affiliate & IB')}
+                        </StyledLink>
+                    </NavLink>
+                </NavCenter>
+                <NavRight
+                    move={show_button}
+                    button_ref={button_ref}
+                    mounted={mounted}
+                    has_scrolled={has_scrolled}
+                >
+                    <Button onClick={handleLogin} primary>
+                        <span>{localize('Log in')}</span>
+                    </Button>
+                    <LocalizedLink to="/signup/">
+                        <SignupButton ref={button_ref} secondary>
+                            <span>{localize('Sign up')}</span>
+                        </SignupButton>
+                    </LocalizedLink>
+                </NavRight>
+                <HamburgerMenu onClick={handleMenuClick} />
+                <OffCanvasMenu
+                    is_canvas_menu_open={is_canvas_menu_open}
+                    closeOffCanvasMenu={closeOffCanvasMenu}
+                />
+            </Wrapper>
+        )
     } else
         return (
             <>
@@ -217,7 +258,7 @@ const NavContent = ({
         )
 }
 
-export const Nav = ({ type }) => {
+export const Nav = ({ nav_type }) => {
     const nav_ref = useRef(null)
     const button_ref = useRef(null)
     const [is_platforms_open, setIsPlatformsOpen] = useState(false)
@@ -265,7 +306,7 @@ export const Nav = ({ type }) => {
         <NavWrapper ref={nav_ref}>
             <StyledNav>
                 <NavContent
-                    type={type}
+                    nav_type={nav_type}
                     is_platforms_open={is_platforms_open}
                     has_animation={has_animation}
                     handlePlatformsClick={handlePlatformsClick}
