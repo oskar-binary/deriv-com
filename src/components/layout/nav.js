@@ -12,8 +12,16 @@ import Login from 'common/login'
 import device from 'themes/device'
 // Icons
 import Logo from 'images/svg/logo-deriv.svg'
+import DerivLogo from 'images/svg/deriv-footer.svg'
 import Hamburger from 'images/svg/hamburger_menu.svg'
 
+const DerivOnlyLogo = styled(DerivLogo)`
+    width: 18rem;
+
+    g {
+        fill: var(--color-white);
+    }
+`
 const NavWrapper = styled.div`
     width: 100%;
     position: fixed;
@@ -159,7 +167,7 @@ const NavContent = ({
             <Wrapper>
                 <NavLeft>
                     <LogoLink to="/" aria-label={localize('Home')}>
-                        <Logo />
+                        <DerivOnlyLogo />
                     </LogoLink>
                 </NavLeft>
                 <NavCenter>
