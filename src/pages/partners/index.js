@@ -46,7 +46,7 @@ const why_partner_with_us_items = [
 ]
 const Partners = () => {
     return (
-        <Layout>
+        <Layout type="partners">
             <SectionContainer>
                 <Container direction="column">
                     <Header as="h4" weight="500" align="center">

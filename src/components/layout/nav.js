@@ -89,16 +89,16 @@ const NavRight = styled.div`
     }};
     transform: translateX(
         ${props => {
-        if (props.move) {
-            return 0
-        } else {
-            if (props.button_ref.current && props.mounted) {
-                const calculation = props.button_ref.current.offsetWidth + 2
-                return `${calculation}px`
+            if (props.move) {
+                return 0
+            } else {
+                if (props.button_ref.current && props.mounted) {
+                    const calculation = props.button_ref.current.offsetWidth + 2
+                    return `${calculation}px`
+                }
+                return '350px'
             }
-            return '350px'
-        }
-    }}
+        }}
     );
     @media ${device.tabletL} {
         display: none;
@@ -138,11 +138,27 @@ const handleScroll = (show, hide) => {
     window.scrollY > show_height ? show() : hide()
 }
 
-const NavContent = ({ type }) => {
+const NavContent = ({
+    type,
+    is_platforms_open,
+    has_animation,
+    handlePlatformsClick,
+    handleNormalLink,
+    show_button,
+    button_ref,
+    mounted,
+    has_scrolled,
+    handleLogin,
+    handleMenuClick,
+    is_canvas_menu_open,
+    closeOffCanvasMenu,
+}) => {
     if (type === 'partners') {
         return <div>Partners</div>
-    } else return (
-    <PlatformsDropdown is_open={is_platforms_open} has_animation={has_animation} />
+    } else
+        return (
+            <>
+                <PlatformsDropdown is_open={is_platforms_open} has_animation={has_animation} />
                 <Wrapper>
                     <NavLeft>
                         <LogoLink to="/" aria-label={localize('Home')}>
@@ -185,7 +201,7 @@ const NavContent = ({ type }) => {
                         <Button onClick={handleLogin} primary>
                             <span>{localize('Log in')}</span>
                         </Button>
-                        <LocalizedLink to='/signup/'>
+                        <LocalizedLink to="/signup/">
                             <SignupButton ref={button_ref} secondary>
                                 <span>{localize('Try for free')}</span>
                             </SignupButton>
@@ -197,8 +213,9 @@ const NavContent = ({ type }) => {
                         closeOffCanvasMenu={closeOffCanvasMenu}
                     />
                 </Wrapper>
-    )
- }
+            </>
+        )
+}
 
 export const Nav = ({ type }) => {
     const nav_ref = useRef(null)
@@ -247,7 +264,21 @@ export const Nav = ({ type }) => {
     return (
         <NavWrapper ref={nav_ref}>
             <StyledNav>
-                <NavContent type={type} />
+                <NavContent
+                    type={type}
+                    is_platforms_open={is_platforms_open}
+                    has_animation={has_animation}
+                    handlePlatformsClick={handlePlatformsClick}
+                    handleNormalLink={handleNormalLink}
+                    show_button={show_button}
+                    button_ref={button_ref}
+                    mounted={mounted}
+                    has_scrolled={has_scrolled}
+                    handleLogin={handleLogin}
+                    handleMenuClick={handleMenuClick}
+                    is_canvas_menu_open={is_canvas_menu_open}
+                    closeOffCanvasMenu={closeOffCanvasMenu}
+                />
             </StyledNav>
         </NavWrapper>
     )
