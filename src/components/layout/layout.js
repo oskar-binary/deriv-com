@@ -10,10 +10,10 @@ const Main = styled.main`
     height: ${props => (props.is_static ? '92vh' : '100%')};
 `
 
-const Layout = ({ children, is_static, padding_top }) => (
+const Layout = ({ children, is_static, padding_top, type = '' }) => (
     <>
         {is_static ? <NavStatic /> : <Nav />}
-        <Main padding_top={padding_top} is_static={is_static}>
+        <Main padding_top={padding_top} is_static={is_static} type={type}>
             {children}
         </Main>
         {!is_static && <Footer />}

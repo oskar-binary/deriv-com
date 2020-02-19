@@ -138,54 +138,11 @@ const handleScroll = (show, hide) => {
     window.scrollY > show_height ? show() : hide()
 }
 
-export const Nav = () => {
-    const nav_ref = useRef(null)
-    const button_ref = useRef(null)
-    const [is_platforms_open, setIsPlatformsOpen] = useState(false)
-    const [has_animation, setHasAnimation] = useState(false)
-    const [show_button, showButton, hideButton] = moveButton()
-    const [mounted, setMounted] = useState(false)
-    const [has_scrolled, setHasScrolled] = useState(false)
-
-    const buttonHandleScroll = () => {
-        setHasScrolled(true)
-        handleScroll(showButton, hideButton)
-    }
-    const [is_canvas_menu_open, openOffCanvasMenu, closeOffCanvasMenu] = moveOffCanvasMenu()
-    useEffect(() => {
-        setMounted(true)
-        document.addEventListener('scroll', buttonHandleScroll, {
-            passive: true,
-        })
-        const handleClickOutside = e => {
-            if (!nav_ref.current.contains(e.target)) {
-                setIsPlatformsOpen(false)
-            }
-        }
-        document.addEventListener('click', handleClickOutside)
-        return () => {
-            document.removeEventListener('scroll', buttonHandleScroll)
-            document.removeEventListener('click', handleClickOutside)
-        }
-    }, [])
-    const handleLogin = () => {
-        Login.redirectToLogin()
-    }
-    const handleMenuClick = () => {
-        is_canvas_menu_open ? closeOffCanvasMenu() : openOffCanvasMenu()
-    }
-    const handlePlatformsClick = () => {
-        setIsPlatformsOpen(!is_platforms_open)
-        setHasAnimation(true)
-    }
-    const handleNormalLink = () => {
-        setHasAnimation(false)
-    }
-
-    return (
-        <NavWrapper ref={nav_ref}>
-            <StyledNav>
-                <PlatformsDropdown is_open={is_platforms_open} has_animation={has_animation} />
+const NavContent = ({ type }) => {
+    if (type === 'partners') {
+        return <div>Partners</div>
+    } else return (
+    <PlatformsDropdown is_open={is_platforms_open} has_animation={has_animation} />
                 <Wrapper>
                     <NavLeft>
                         <LogoLink to="/" aria-label={localize('Home')}>
@@ -240,6 +197,57 @@ export const Nav = () => {
                         closeOffCanvasMenu={closeOffCanvasMenu}
                     />
                 </Wrapper>
+    )
+ }
+
+export const Nav = ({ type }) => {
+    const nav_ref = useRef(null)
+    const button_ref = useRef(null)
+    const [is_platforms_open, setIsPlatformsOpen] = useState(false)
+    const [has_animation, setHasAnimation] = useState(false)
+    const [show_button, showButton, hideButton] = moveButton()
+    const [mounted, setMounted] = useState(false)
+    const [has_scrolled, setHasScrolled] = useState(false)
+
+    const buttonHandleScroll = () => {
+        setHasScrolled(true)
+        handleScroll(showButton, hideButton)
+    }
+    const [is_canvas_menu_open, openOffCanvasMenu, closeOffCanvasMenu] = moveOffCanvasMenu()
+    useEffect(() => {
+        setMounted(true)
+        document.addEventListener('scroll', buttonHandleScroll, {
+            passive: true,
+        })
+        const handleClickOutside = e => {
+            if (!nav_ref.current.contains(e.target)) {
+                setIsPlatformsOpen(false)
+            }
+        }
+        document.addEventListener('click', handleClickOutside)
+        return () => {
+            document.removeEventListener('scroll', buttonHandleScroll)
+            document.removeEventListener('click', handleClickOutside)
+        }
+    }, [])
+    const handleLogin = () => {
+        Login.redirectToLogin()
+    }
+    const handleMenuClick = () => {
+        is_canvas_menu_open ? closeOffCanvasMenu() : openOffCanvasMenu()
+    }
+    const handlePlatformsClick = () => {
+        setIsPlatformsOpen(!is_platforms_open)
+        setHasAnimation(true)
+    }
+    const handleNormalLink = () => {
+        setHasAnimation(false)
+    }
+
+    return (
+        <NavWrapper ref={nav_ref}>
+            <StyledNav>
+                <NavContent type={type} />
             </StyledNav>
         </NavWrapper>
     )
