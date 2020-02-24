@@ -5,8 +5,8 @@ import styled from 'styled-components'
 import PlatformsDropdown from '../custom/platforms-dropdown'
 import { LocalizedLink, localize } from 'components/localization'
 import { Button } from 'components/form'
-import { Container } from 'components/containers'
-import { OffCanvasMenu, moveOffCanvasMenu } from 'components/elements'
+import { Container, Flex } from 'components/containers'
+import { OffCanvasMenu, moveOffCanvasMenu, Text } from 'components/elements'
 import { SharedLinkStyle } from 'components/localization/localized-link'
 import Login from 'common/login'
 import device from 'themes/device'
@@ -32,7 +32,7 @@ const LogoLink = styled(LocalizedLink)`
 `
 const StyledNav = styled.nav`
     background-color: var(--color-black);
-    height: 7.2rem;
+    height: ${props => (props.h ? props.h : '7.2rem')};
     width: 100%;
     position: relative;
     @media ${device.tabletL} {
@@ -45,6 +45,7 @@ const Wrapper = styled(Container)`
     justify-content: space-between;
     height: 7.2rem;
     overflow: hidden;
+
     @media ${device.laptop} {
         font-size: var(--text-size-xxs);
 
@@ -145,6 +146,20 @@ const handleScroll = (show, hide) => {
     const show_height = 400
     window.scrollY > show_height ? show() : hide()
 }
+const StyledTopLink = styled(LocalizedLink)`
+    text-decoration: none;
+`
+const TopNav = styled.nav`
+    display: flex;
+    padding: 0.6rem 0;
+
+    *:not(:first-child):not(:last-child) {
+        margin: 0 3.2rem;
+    }
+`
+const TopWrapper = styled.div`
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+`
 
 const NavContent = ({
     nav_type,
@@ -156,53 +171,82 @@ const NavContent = ({
     button_ref,
     mounted,
     has_scrolled,
-    handleLogin,
     handleMenuClick,
     is_canvas_menu_open,
     closeOffCanvasMenu,
 }) => {
-    console.log('nav_type: ', nav_type)
+    const handleLogin = () => {
+        Login.redirectToLogin()
+    }
+    const redirectToPartnerSignup = () =>
+        window.open('https://login.binary.com/signup.php', '_blank')
+    const redirectToPartnerLogin = () =>
+        window.open('https://login.binary.com/signin.php', '_blank')
     if (nav_type === 'partners') {
         return (
-            <Wrapper>
-                <NavLeft>
-                    <LogoLink to="/" aria-label={localize('Home')}>
-                        <DerivOnlyLogo />
-                    </LogoLink>
-                </NavLeft>
-                <NavCenter>
-                    <NavLink onClick={handleNormalLink} margin>
-                        <StyledLink
-                            activeClassName="active"
-                            to="/partners/"
-                            aria-label={localize('Affiliate & IB')}
-                            partiallyActive={true}
-                        >
-                            {localize('Affiliate & IB')}
-                        </StyledLink>
-                    </NavLink>
-                </NavCenter>
-                <NavRight
-                    move={show_button}
-                    button_ref={button_ref}
-                    mounted={mounted}
-                    has_scrolled={has_scrolled}
-                >
-                    <Button onClick={handleLogin} primary>
-                        <span>{localize('Log in')}</span>
-                    </Button>
-                    <LocalizedLink to="/signup/">
-                        <SignupButton ref={button_ref} secondary>
+            <>
+                <TopWrapper>
+                    <Container justify="unset">
+                        <TopNav>
+                            <StyledTopLink to="/" aria-label={localize('Home')}>
+                                <Text color="grey-18" size="var(--text-size-xxs)">
+                                    {localize('Deriv homepage')}
+                                </Text>
+                            </StyledTopLink>
+                            <StyledTopLink to="/about/" aria-label={localize('About us')}>
+                                <Text color="grey-18" size="var(--text-size-xxs)">
+                                    {localize('About us')}
+                                </Text>
+                            </StyledTopLink>
+                            <StyledTopLink to="/contact-us/" aria-label={localize('Contact us')}>
+                                <Text color="grey-18" size="var(--text-size-xxs)">
+                                    {localize('Contact us')}
+                                </Text>
+                            </StyledTopLink>
+                        </TopNav>
+                    </Container>
+                </TopWrapper>
+                <Wrapper>
+                    <NavLeft>
+                        <LogoLink to="/partners/" aria-label={localize('Partners')}>
+                            <Flex ai="center">
+                                <DerivOnlyLogo />
+                                <Text color="white">{localize('Partners')}</Text>
+                            </Flex>
+                        </LogoLink>
+                    </NavLeft>
+                    <NavCenter>
+                        <NavLink onClick={handleNormalLink} margin>
+                            <StyledLink
+                                activeClassName="active"
+                                to="/partners/"
+                                aria-label={localize('Affiliate & IB')}
+                                partiallyActive={true}
+                            >
+                                {localize('Affiliate & IB')}
+                            </StyledLink>
+                        </NavLink>
+                    </NavCenter>
+                    <NavRight
+                        move={show_button}
+                        button_ref={button_ref}
+                        mounted={mounted}
+                        has_scrolled={has_scrolled}
+                    >
+                        <Button onClick={redirectToPartnerLogin} primary>
+                            <span>{localize('Log in')}</span>
+                        </Button>
+                        <SignupButton onClick={redirectToPartnerSignup} ref={button_ref} secondary>
                             <span>{localize('Sign up')}</span>
                         </SignupButton>
-                    </LocalizedLink>
-                </NavRight>
-                <HamburgerMenu onClick={handleMenuClick} />
-                <OffCanvasMenu
-                    is_canvas_menu_open={is_canvas_menu_open}
-                    closeOffCanvasMenu={closeOffCanvasMenu}
-                />
-            </Wrapper>
+                    </NavRight>
+                    <HamburgerMenu onClick={handleMenuClick} />
+                    <OffCanvasMenu
+                        is_canvas_menu_open={is_canvas_menu_open}
+                        closeOffCanvasMenu={closeOffCanvasMenu}
+                    />
+                </Wrapper>
+            </>
         )
     } else
         return (
@@ -296,9 +340,7 @@ export const Nav = ({ nav_type }) => {
             document.removeEventListener('click', handleClickOutside)
         }
     }, [])
-    const handleLogin = () => {
-        Login.redirectToLogin()
-    }
+
     const handleMenuClick = () => {
         is_canvas_menu_open ? closeOffCanvasMenu() : openOffCanvasMenu()
     }
@@ -312,7 +354,7 @@ export const Nav = ({ nav_type }) => {
 
     return (
         <NavWrapper ref={nav_ref}>
-            <StyledNav>
+            <StyledNav h={nav_type === 'partners' ? '10.3rem' : ''}>
                 <NavContent
                     nav_type={nav_type}
                     is_platforms_open={is_platforms_open}
@@ -323,7 +365,6 @@ export const Nav = ({ nav_type }) => {
                     button_ref={button_ref}
                     mounted={mounted}
                     has_scrolled={has_scrolled}
-                    handleLogin={handleLogin}
                     handleMenuClick={handleMenuClick}
                     is_canvas_menu_open={is_canvas_menu_open}
                     closeOffCanvasMenu={closeOffCanvasMenu}
